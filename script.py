@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
@@ -9,16 +10,16 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support import expected_conditions as EC
 
-os.environ['GH_TOKEN'] = ""
+load_dotenv()
 driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()))
 
 def main():
-    timesheet_url = ""
+    TIMESHEET_URL = os.getenv("TIMESHEET_URL")
     timesheet_csv = "timesheet.csv"
 
-    load_page(timesheet_url)
+    load_page(TIMESHEET_URL)
 
-    time_entry(0, "Client", "2022-06-13", "", "Configuration", "Desc")
+    time_entry(0, "Client", "2022-06-13", "Configuration", "1", "Desc")
     add_another_response(0)
 
 
