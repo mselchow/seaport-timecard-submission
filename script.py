@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+import csv
 
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
@@ -19,8 +20,16 @@ def main():
 
     load_page(TIMESHEET_URL)
 
+    # CSV fields: Project, Date (MM/DD/YYYY), Task, Time (decimal), Description
+
     time_entry(0, "Client", "2022-06-13", "Configuration", "1", "Desc")
     add_another_response(0)
+
+
+### OTHER METHODS ###
+
+def round_time(time):
+    return math.ceil(time*4)/4
 
 
 ### DATA ENTRY METHODS ###
