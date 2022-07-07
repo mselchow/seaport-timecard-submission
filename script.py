@@ -22,14 +22,27 @@ def main():
 
     # CSV fields: Project, Date (MM/DD/YYYY), Task, Time (decimal), Description
 
-    time_entry(0, "Client", "2022-06-13", "Configuration", "1", "Desc")
+    with open(timesheet_csv, newline='') as csvfile:
+        timesheet_reader = csv.DictReader(csvfile)
+        for row in timesheet_reader:
+            client = row['Project']
+            date = row['Date']
+            action = row['Task']
+            time = row['Time (decimal)']
+            desc = row['Description']
+
+            time_entry(0, client, date, action, time, desc)
+
     add_another_response(0)
 
 
 ### OTHER METHODS ###
 
-def round_time(time):
+def format_time(time):
     return math.ceil(time*4)/4
+
+def format_date(date):
+    return
 
 
 ### DATA ENTRY METHODS ###
