@@ -131,3 +131,4 @@ dmypy.json
 # Other
 geckodriver.log
 *.csv
+.DS_Store
