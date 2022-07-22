@@ -1,6 +1,9 @@
 import os
-from dotenv import load_dotenv
 import csv
+import math
+import time
+from dotenv import load_dotenv
+from datetime import datetime
 
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
@@ -20,7 +23,13 @@ def main():
 
     load_page(TIMESHEET_URL)
 
-    # CSV fields: Project, Date (MM/DD/YYYY), Task, Time (decimal), Description
+    index = 0
+
+    with open(timesheet_csv, newline='') as csvfile:
+        count_reader = csv.DictReader(csvfile)
+        total_rows = 0
+        for row in count_reader:
+            total_rows += 1
 
     with open(timesheet_csv, newline='') as csvfile:
         timesheet_reader = csv.DictReader(csvfile)
@@ -28,21 +37,25 @@ def main():
             client = row['Project']
             date = row['Date']
             action = row['Task']
-            time = row['Time (decimal)']
+            time2 = row['Time (decimal)']
             desc = row['Description']
 
-            time_entry(0, client, date, action, time, desc)
+            time_entry(index, client, format_date(date), action, format_time(time2), desc)
+            driver.execute_script("!!document.activeElement ? document.activeElement.blur() : 0");
 
-    add_another_response(0)
+            add_another_response(index)
+
+            index += 1
 
 
 ### OTHER METHODS ###
 
-def format_time(time):
-    return math.ceil(time*4)/4
+def format_time(time_str):
+    return math.ceil(float(time_str)*4)/4
 
-def format_date(date):
-    return
+def format_date(date_str):
+    date = datetime.strptime(date_str, "%-m/%d/%Y").date()
+    return date.strftime("%Y-%m-%d")
 
 
 ### DATA ENTRY METHODS ###
@@ -57,7 +70,7 @@ def time_entry(index, project, date, action, time, description):
 def enter_project(index, project):
     project_field = driver.find_element(By.ID, project_field_id(index))
     project_field.send_keys(project)
-    client_selection = driver.find_element(By.XPATH, '//div[contains(@class, "tt-dataset")]')
+    client_selection = project_field.find_element(By.XPATH, '//div[contains(@class, "tt-dataset")]')
     wait = WebDriverWait(driver, 20);
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "tt-dataset")));
     client_selection.click()
@@ -65,7 +78,7 @@ def enter_project(index, project):
 def enter_date(index, date):
     date_field = driver.find_element(By.ID, date_field_id(index))
     date_field.click()
-    day_icon = driver.find_element(By.XPATH, '//span[@data-date="' + date + '"]')
+    day_icon = date_field.find_element(By.XPATH, '//span[@data-date="' + date + '"]')
     day_icon.click()
 
 def enter_action(index, action):
