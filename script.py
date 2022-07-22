@@ -70,15 +70,16 @@ def time_entry(index, project, date, action, time, description):
 def enter_project(index, project):
     project_field = driver.find_element(By.ID, project_field_id(index))
     project_field.send_keys(project)
-    client_selection = project_field.find_element(By.XPATH, '//div[contains(@class, "tt-dataset")]')
+    dataset_number = str(index * 2)
+    client_selection = project_field.find_element(By.XPATH, '//div[contains(@class, "tt-dataset-' + dataset_number + '")]')
     wait = WebDriverWait(driver, 20);
-    wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "tt-dataset")));
+    wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "tt-dataset-" + dataset_number)));
     client_selection.click()
 
 def enter_date(index, date):
     date_field = driver.find_element(By.ID, date_field_id(index))
     date_field.click()
-    day_icon = date_field.find_element(By.XPATH, '//span[@data-date="' + date + '"]')
+    day_icon = date_field.find_element(By.XPATH, '//span[@data-date="' + date + '" and not(ancestor::div[contains(@style, "display: none")]) and not(ancestor::div[contains(@style, "display: none")])]')
     day_icon.click()
 
 def enter_action(index, action):
