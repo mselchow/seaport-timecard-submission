@@ -22,6 +22,7 @@ def main():
     timesheet_csv = "timesheet.csv"
 
     load_page(TIMESHEET_URL)
+    driver.maximize_window()
 
     index = 0
 
