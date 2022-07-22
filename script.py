@@ -54,7 +54,7 @@ def format_time(time_str):
     return math.ceil(float(time_str)*4)/4
 
 def format_date(date_str):
-    date = datetime.strptime(date_str, "%-m/%d/%Y").date()
+    date = datetime.strptime(date_str, "%m/%d/%y").date()
     return date.strftime("%Y-%m-%d")
 
 
